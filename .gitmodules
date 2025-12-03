@@ -1,4 +1,0 @@
-[submodule "External/UE"]
-	path = External/UE
-	url = https://github.com/EpicGames/UnrealEngine.git
-	branch = release
