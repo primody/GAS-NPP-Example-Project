@@ -1,1 +1,7 @@
-External/UE/
+External/*
+Intermediate/*
+Plugins/*
+Saved/*
+Binaries/*
+.idea/*
+.vs/*
