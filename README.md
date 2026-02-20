@@ -14,4 +14,6 @@ cd GAS-NPP-5.7.1-Example-Project
 powershell Scripts/plugin-setup.ps1
 ```
 
+NOTE: This will not work if your Git account does not have access to Unreal Engine source on Github. You can go [here](https://www.unrealengine.com/en-US/ue-on-github) to fix that.
+
 If you do not have Git, you can download the zip, extract it, and then run the 3rd command using Powershell.
