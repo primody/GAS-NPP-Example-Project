@@ -67,14 +67,19 @@ foreach ($PluginPath in $Plugins) {
     $Source = "External/UE/$PluginPath"
     $Destination = "Plugins/$PluginName"
 
+    # Validate source exists (sparse checkout may not contain it)
+    if (-not (Test-Path $Source)) {
+        Write-Warning "UE plugin missing in sparse checkout: $PluginName ($PluginPath)"
+        continue
+    }
+
     Write-Host "Copying $PluginName into project Plugins folder..."
 
-    # Remove destination if it exists (clean copy)
+    # Remove destination if it exists
     if (Test-Path $Destination) {
         Remove-Item -Recurse -Force $Destination
     }
 
-    # Copy the plugin
     Copy-Item -Recurse -Force $Source $Destination
 }
 
