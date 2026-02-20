@@ -83,21 +83,28 @@ foreach ($PluginPath in $Plugins) {
 # -------------------------------
 
 $GasRepo = "https://github.com/Sabri-Kai/GAS-NPP-Simulation.git"
+$GasBranch = "GAS-NPP-Simulation-5.7"
 $GasPath = "External/GAS-NPP-Simulation"
 $GasPluginSource = "$GasPath/AbilitySystemSimulation"
 $GasPluginDestination = "Plugins/AbilitySystemSimulation"
 
-Write-Host "`n=== Fetching GAS-NPP-Simulation plugin ==="
+Write-Host "`n=== Fetching GAS-NPP-Simulation plugin ($GasBranch) ==="
 
-# Clone the repo only if it doesn't exist
-if (-not (Test-Path $GasPath)) {
-    git clone `
-        --depth 1 `
-        $GasRepo `
-        $GasPath
+# Always remove old repo (deterministic builds)
+if (Test-Path $GasPath) {
+    Write-Host "Removing existing GAS repo..."
+    Remove-Item -Recurse -Force $GasPath
 }
 
-# Copy it into the Plugins folder
+# Fresh shallow clone of the branch
+git clone `
+    --depth 1 `
+    --branch $GasBranch `
+    --single-branch `
+    $GasRepo `
+    $GasPath
+
+# Copy plugin
 if (Test-Path $GasPluginDestination) {
     Remove-Item -Recurse -Force $GasPluginDestination
 }
@@ -111,10 +118,9 @@ Write-Host "GAS plugin installed at: $GasPluginDestination"
 # -------------------------------
 
 $NppRepo = "https://github.com/Sabri-Kai/UnrealEngineNPP.git"
-$NppBranch = "GAS-NPP-5.5"
+$NppBranch = "GAS-NPP-5.7"
 $NppPath = "External/UnrealEngineNPP"
 
-# Plugin folders from the repo
 $NppPlugins = @(
     "GameplayAbilities",
     "NetworkPrediction",
@@ -122,18 +128,23 @@ $NppPlugins = @(
     "NetworkPredictionInsights"
 )
 
-Write-Host "`n=== Fetching UnrealEngineNPP plugins ==="
+Write-Host "`n=== Fetching UnrealEngineNPP plugins ($NppBranch) ==="
 
-# Clone repo only if not already present
-if (-not (Test-Path $NppPath)) {
-    git clone `
-        --depth 1 `
-        --branch $NppBranch `
-        $NppRepo `
-        $NppPath
+# Always remove old repo (prevents wrong branch issues)
+if (Test-Path $NppPath) {
+    Write-Host "Removing existing UnrealEngineNPP repo..."
+    Remove-Item -Recurse -Force $NppPath
 }
 
-# Copy each plugin into YourProject/Plugins/
+# Fresh shallow clone of correct branch
+git clone `
+    --depth 1 `
+    --branch $NppBranch `
+    --single-branch `
+    $NppRepo `
+    $NppPath
+
+# Copy plugins
 foreach ($PluginName in $NppPlugins) {
 
     $Source = "$NppPath/$PluginName"
